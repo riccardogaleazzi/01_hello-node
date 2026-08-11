@@ -19,3 +19,5 @@ rl.question("Come ti chiami? ", (name) => {
     });
     
 });
+
+console.log("Questo progetto crescerà");
