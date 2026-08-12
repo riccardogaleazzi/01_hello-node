@@ -13,9 +13,12 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/riccardogaleazzi/01_hello-node/issues"
   },
-  "homepage": "https://github.com/riccardogaleazzi/01_hello-node#readme"
+  "homepage": "https://github.com/riccardogaleazzi/01_hello-node#readme",
+  "dependencies": {
+    "chalk": "^6.0.0"
+  }
 }
