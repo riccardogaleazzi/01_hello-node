@@ -1,6 +1,13 @@
 import readline from "readline";
 import chalk from "chalk";
-import { createStudent, findStudent } from "./student.js";
+import { createStudent } from "./student.js";
+import {
+    getAllStudents,
+    addStudent as addStudentToManager,
+    searchStudent as searchStudentFromManager,
+    removeStudent as removeStudentFromManager,
+    updateStudent as updateStudentFromManager
+} from "./studentManager.js";
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -13,11 +20,76 @@ function askQuestion(question) {
     });
 }
 
-const students = [
-    createStudent("Riccardo", 19, "Ingegneria Aerospaziale"),
-    createStudent("Daniele", 20, "Ingegneria Meccanica"),
-    createStudent("Marco", 21, "Ingegneria Informatica")
-];
+function showStudents() {
+    const students = getAllStudents();
+
+    for (const student of students) {
+        console.log(`${student.name} - ${student.age} - ${student.faculty}`);
+    }
+}
+
+async function searchStudent() {
+    const name = await askQuestion("Quale studente cerchi? ");
+    const result = searchStudentFromManager(name);
+
+    if (result) {
+        console.log(`Studente trovato: ${result.name}`);
+        console.log(`Età: ${result.age}`);
+        console.log(`Corso: ${result.faculty}`);
+    } else {
+        console.log("Studente non trovato");
+    }
+}
+
+async function addStudent() {
+    const name = await askQuestion("Come ti chiami? ");
+    const age = await askQuestion("Quanti anni hai? ");
+    const numericAge = Number(age);
+
+    if (
+        Number.isNaN(numericAge) ||
+        numericAge <= 0 ||
+        numericAge > 130 ||
+        !Number.isInteger(numericAge)
+    ) {
+        console.log("Età non valida.");
+        return;
+    }
+
+    const faculty = await askQuestion("Quale corso frequenti? ");
+    const newStudent = createStudent(name, numericAge, faculty);
+
+    addStudentToManager(newStudent);
+
+    console.log("Studente aggiunto!");
+}
+
+async function removeStudent() {
+    const name = await askQuestion("Quale studente vuoi rimuovere? ");
+
+    const removed = removeStudentFromManager(name);
+
+    if (removed) {
+        console.log("Studente rimosso!");
+    } else {
+        console.log("Studente non trovato.");
+    }
+}
+
+async function updateStudent(){
+    const name = await askQuestion("Quale studente vuoi modificare? ");
+    const newFaculty = await askQuestion("Nuovo corso di laurea: ");
+    const newAge = await askQuestion("Nuova età: ");
+
+    updateStudentFromManager(name, newFaculty, newAge);
+    const updated = updateStudentFromManager(name, newFaculty, newAge);
+
+    if(updated) {
+        console.log("Studente aggiornato!");
+    } else {
+        console.log("Studente non trovato.");
+    }
+}
 
 async function main() {
     let running = true;
@@ -29,40 +101,44 @@ async function main() {
         console.log("1. Mostra studenti");
         console.log("2. Cerca studente");
         console.log("3. Esci");
+        console.log("4. Aggiungi studente");
+        console.log("5. Rimuovi studente");
+        console.log("6. Modifica studente");
 
         const choice = await askQuestion("Scelta: ");
 
         switch (choice) {
-            case "1":
-                for (const student of students) {
-                    console.log(
-                        `${student.name} - ${student.age} - ${student.faculty}`
-                    );
-                }
-                break;
-
-            case "2": {
-                const name = await askQuestion("Quale studente cerchi? ");
-                const result = findStudent(students, name);
-
-                if (result) {
-                    console.log(`Studente trovato: ${result.name}`);
-                    console.log(`Età: ${result.age}`);
-                    console.log(`Corso: ${result.faculty}`);
-                } else {
-                    console.log("Studente non trovato");
-                }
-
+            case "1": {
+                showStudents();
                 break;
             }
 
-            case "3":
+            case "2": {
+                await searchStudent();
+                break;
+            }
+
+            case "3": {
                 console.log("Arrivederci!");
                 running = false;
                 break;
+            }
+            case "4": {
+                await addStudent();
+                break;
+            }
+            case "5": {
+                await removeStudent();
+                break;
+            }
+            case "6": {
+                await updateStudent();
+                break;
+            }
 
             default:
                 console.log("Scelta non valida.");
+
         }
     }
 
