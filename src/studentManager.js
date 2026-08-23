@@ -38,3 +38,8 @@ export function updateStudent(name, newFaculty, newAge) {
 
     return true;
 }
+
+export function findStudentsByFaculty(faculty) {
+    const results = students.filter(student => student.faculty.trim().toLowerCase() === faculty.trim().toLowerCase());
+    return results; 
+}

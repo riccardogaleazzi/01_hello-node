@@ -6,7 +6,8 @@ import {
     addStudent as addStudentToManager,
     searchStudent as searchStudentFromManager,
     removeStudent as removeStudentFromManager,
-    updateStudent as updateStudentFromManager
+    updateStudent as updateStudentFromManager,
+    findStudentsByFaculty as findStudentsByFacultyFromManager
 } from "./studentManager.js";
 
 const rl = readline.createInterface({
@@ -43,6 +44,12 @@ async function searchStudent() {
 
 async function addStudent() {
     const name = await askQuestion("Come ti chiami? ");
+
+    if (name.trim() === "") {
+        console.log("il nome non può essere vuoto. ");
+        return;
+    }
+
     const age = await askQuestion("Quanti anni hai? ");
     const numericAge = Number(age);
 
@@ -57,7 +64,13 @@ async function addStudent() {
     }
 
     const faculty = await askQuestion("Quale corso frequenti? ");
-    const newStudent = createStudent(name, numericAge, faculty);
+
+    if (faculty.trim() === "") {
+        console.log("Il corso non può essere vuoto.");
+        return;
+    }
+
+    const newStudent = createStudent(name.trim(), numericAge, faculty.trim());
 
     addStudentToManager(newStudent);
 
@@ -80,14 +93,29 @@ async function updateStudent(){
     const name = await askQuestion("Quale studente vuoi modificare? ");
     const newFaculty = await askQuestion("Nuovo corso di laurea: ");
     const newAge = await askQuestion("Nuova età: ");
+    const numericAge = Number(newAge);
 
-    updateStudentFromManager(name, newFaculty, newAge);
     const updated = updateStudentFromManager(name, newFaculty, newAge);
 
     if(updated) {
         console.log("Studente aggiornato!");
     } else {
         console.log("Studente non trovato.");
+    }
+}
+
+async function searchStudentsByFaculty() {
+    const faculty = await askQuestion("Quale facoltà cerchi? ");
+
+    const results = findStudentsByFacultyFromManager(faculty);
+
+    if (results.length === 0) {
+        console.log("Nessuno studente trovato.");
+        return;
+    }
+
+    for (const student of results) {
+        console.log(`${student.name} - ${student.age} - ${student.faculty}`);
     }
 }
 
@@ -104,6 +132,7 @@ async function main() {
         console.log("4. Aggiungi studente");
         console.log("5. Rimuovi studente");
         console.log("6. Modifica studente");
+        console.log("7. Cerca studenti per facoltà");
 
         const choice = await askQuestion("Scelta: ");
 
@@ -133,6 +162,10 @@ async function main() {
             }
             case "6": {
                 await updateStudent();
+                break;
+            }
+            case "7": {
+                await searchStudentsByFaculty();
                 break;
             }
 
