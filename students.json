@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Daniele",
+    "age": 20,
+    "faculty": "Ingegneria Meccanica",
+    "university": "Politecnico di Milano"
+  },
+  {
+    "name": "Marco",
+    "age": 21,
+    "faculty": "Ingegneria Informatica",
+    "university": "Politecnico di Milano"
+  },
+  {
+    "name": "Luca",
+    "age": 22,
+    "faculty": "Ingegneria Energetica",
+    "university": "Politecnico di Milano"
+  },
+  {
+    "name": "Egidio",
+    "age": 45,
+    "faculty": "Medicina",
+    "university": "Politecnico di Milano"
+  }
+]

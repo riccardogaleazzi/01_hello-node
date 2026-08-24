@@ -7,7 +7,8 @@ import {
     searchStudent as searchStudentFromManager,
     removeStudent as removeStudentFromManager,
     updateStudent as updateStudentFromManager,
-    findStudentsByFaculty as findStudentsByFacultyFromManager
+    findStudentsByFaculty as findStudentsByFacultyFromManager,
+    loadStudents
 } from "./studentManager.js";
 
 const rl = readline.createInterface({
@@ -72,7 +73,7 @@ async function addStudent() {
 
     const newStudent = createStudent(name.trim(), numericAge, faculty.trim());
 
-    addStudentToManager(newStudent);
+    await addStudentToManager(newStudent);
 
     console.log("Studente aggiunto!");
 }
@@ -80,7 +81,7 @@ async function addStudent() {
 async function removeStudent() {
     const name = await askQuestion("Quale studente vuoi rimuovere? ");
 
-    const removed = removeStudentFromManager(name);
+    const removed = await removeStudentFromManager(name);
 
     if (removed) {
         console.log("Studente rimosso!");
@@ -95,7 +96,7 @@ async function updateStudent(){
     const newAge = await askQuestion("Nuova età: ");
     const numericAge = Number(newAge);
 
-    const updated = updateStudentFromManager(name, newFaculty, newAge);
+    const updated = await updateStudentFromManager(name, newFaculty, numericAge);
 
     if(updated) {
         console.log("Studente aggiornato!");
@@ -120,6 +121,8 @@ async function searchStudentsByFaculty() {
 }
 
 async function main() {
+    await loadStudents();
+
     let running = true;
 
     while (running) {
