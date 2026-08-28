@@ -8,7 +8,8 @@ import {
     removeStudent as removeStudentFromManager,
     updateStudent as updateStudentFromManager,
     findStudentsByFaculty as findStudentsByFacultyFromManager,
-    loadStudents
+    initializeStudents,
+    getStudentsSortedByAge as getStudentsSortedByAgeFromManager
 } from "./studentManager.js";
 
 const rl = readline.createInterface({
@@ -26,7 +27,7 @@ function showStudents() {
     const students = getAllStudents();
 
     for (const student of students) {
-        console.log(`${student.name} - ${student.age} - ${student.faculty}`);
+        console.log(`${student.id} - ${student.name} - ${student.age} - ${student.faculty}`);
     }
 }
 
@@ -35,9 +36,8 @@ async function searchStudent() {
     const result = searchStudentFromManager(name);
 
     if (result) {
-        console.log(`Studente trovato: ${result.name}`);
-        console.log(`Età: ${result.age}`);
-        console.log(`Corso: ${result.faculty}`);
+        console.log("Studente trovato: ");
+        console.log(`${student.id} - ${student.name} - ${student.age} - ${student.faculty}`);
     } else {
         console.log("Studente non trovato");
     }
@@ -71,9 +71,11 @@ async function addStudent() {
         return;
     }
 
-    const newStudent = createStudent(name.trim(), numericAge, faculty.trim());
-
-    await addStudentToManager(newStudent);
+    await addStudentToManager(
+        name.trim(),
+        numericAge,
+        faculty.trim()
+    );
 
     console.log("Studente aggiunto!");
 }
@@ -116,69 +118,183 @@ async function searchStudentsByFaculty() {
     }
 
     for (const student of results) {
-        console.log(`${student.name} - ${student.age} - ${student.faculty}`);
+        console.log(`${student.id} - ${student.name} - ${student.age} - ${student.faculty}`);
     }
 }
 
-async function main() {
-    await loadStudents();
+function showStudentsSortedByAge(sortOrder) {
+    const students = getStudentsSortedByAgeFromManager(sortOrder);
 
+    for (const student of students) {
+        console.log(`${student.id} - ${student.name} - ${student.age} - ${student.faculty}`);
+    }
+}
+
+async function studentMenu() {
     let running = true;
 
-    while (running) {
-        console.log(chalk.green("================================"));
-        console.log(chalk.green("     ENGINEERING STUDY LAB"));
-        console.log(chalk.green("================================"));
+    while(running) {
+        console.log(chalk.blue("================================"));
+        console.log(chalk.blue("       GESTIONE STUDENTI"));
+        console.log(chalk.blue("================================"));
         console.log("1. Mostra studenti");
-        console.log("2. Cerca studente");
-        console.log("3. Esci");
-        console.log("4. Aggiungi studente");
-        console.log("5. Rimuovi studente");
-        console.log("6. Modifica studente");
-        console.log("7. Cerca studenti per facoltà");
+        console.log("2. Aggiungi studente");
+        console.log("3. Modifica studente");
+        console.log("4. Rimuovi studente");
+        console.log("0. Indietro");
 
-        const choice = await askQuestion("Scelta: ");
+        const choice = (await askQuestion("Scelta: ")).trim();
 
-        switch (choice) {
+        switch (choice){
             case "1": {
                 showStudents();
                 break;
             }
 
             case "2": {
-                await searchStudent();
+                await addStudent();
                 break;
             }
 
             case "3": {
-                console.log("Arrivederci!");
-                running = false;
-                break;
-            }
-            case "4": {
-                await addStudent();
-                break;
-            }
-            case "5": {
-                await removeStudent();
-                break;
-            }
-            case "6": {
                 await updateStudent();
                 break;
             }
-            case "7": {
-                await searchStudentsByFaculty();
+
+            case "4": {
+                await removeStudent();
+                break;
+            }
+
+            case "0": {
+                running = false;
                 break;
             }
 
             default:
-                console.log("Scelta non valida.");
+                console.log("Scelta non valida");
 
         }
     }
+}
 
+async function searchMenu() {
+    let running = true; 
+
+    while(running) {
+        console.log(chalk.yellow("================================"));
+        console.log(chalk.yellow("       RICERCA STUDENTI"));
+        console.log(chalk.yellow("================================"));
+        console.log("1. Cerca per nome");
+        console.log("2. Cerca per facoltà");
+        console.log("0. Indietro");
+
+        const choice = (await askQuestion("Scelta: ")).trim();
+
+        switch (choice) {
+            case "1": {
+                await searchStudent();
+                break;
+            }
+
+            case "2": {
+                await searchStudentsByFaculty();
+                break;
+            }
+
+            case "0": {
+                running = false; 
+                break;
+            }
+
+            default:
+                console.log("Scelta non valida");
+        }
+    }
+}
+
+async function sortMenu(){
+    let running = true;
+
+    while (running) {
+        console.log(chalk.magenta("================================"));
+        console.log(chalk.magenta("       ORDINAMENTO STUDENTI"));
+        console.log(chalk.magenta("================================"));
+        console.log("1. Età crescente");
+        console.log("2. Età decrescente");
+        console.log("0. Indietro");
+
+        const choice = (await askQuestion("Scelta: ")).trim();
+
+        switch (choice) {
+            case "1": {
+                showStudentsSortedByAge("asc");
+                break;
+            }
+
+            case "2": {
+                showStudentsSortedByAge("desc");
+                break;
+            }
+
+            case "0": {
+                running = false;
+                break;
+            }
+
+            default: 
+            console.log("Scelta non valida");
+        }
+    }
+}
+
+async function main() {
+    await initializeStudents();
+    await mainMenu();
     rl.close();
 }
+
+async function mainMenu() {
+    let running = true;
+
+    while (running) {
+        console.log(chalk.green("================================"));
+        console.log(chalk.green("     ENGINEERING STUDY LAB"));
+        console.log(chalk.green("================================"));
+        console.log("1. Gestione studenti");
+        console.log("2. Ricerca studenti");
+        console.log("3. Ordinamento studenti");
+        console.log("0. Esci");
+
+        const choice = (await askQuestion("Scelta: ")).trim();
+        
+        switch (choice) {
+            case "1": {
+                await studentMenu();
+                break;
+            }
+
+            case "2": {
+                await searchMenu();
+                break;
+            }
+
+            case "3": {
+                await sortMenu();
+                break;
+            }
+
+            case "0": {
+                console.log("Arrivederci");
+                running = false;
+                break;
+            }
+
+            default:
+                console.log("Scelta non valida");
+        }
+    }
+}
+
 
 main();

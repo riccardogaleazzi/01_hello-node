@@ -1,5 +1,6 @@
-export function createStudent(name, age, faculty){
-    return{
+export function createStudent(id, name, age, faculty) {
+    return {
+        id: id,
         name: name,
         age: age,
         faculty: faculty,

@@ -1,34 +1,46 @@
-import { findStudent } from "./student.js";
-import { readFile, writeFile } from "fs/promises";
+import { findStudent, createStudent } from "./student.js";
+import { loadStudents, saveStudents } from "./studentRepository.js"
 
 let students = [
 ];
 
-export async function loadStudents() {
-    try {
-        const data = await readFile("./students.json", "utf-8");
-        students = JSON.parse(data);
-    } catch (error) {
-        console.log("Errore nel caricamento degli studenti.");
+function generateStudentId() {
+    if (students.length === 0) {
+        return 1;
     }
+
+    const maxId = Math.max(...students.map(student => student.id));
+
+    return maxId + 1;
 }
 
-async function saveStudents() {
-    try {
-        const data = JSON.stringify(students, null, 2);
-        await writeFile("./students.json", data, "utf-8");
-    } catch (error) {
-        console.log("Errore nel salvataggio degli studenti.");
+export function getStudentsSortedByAge(order) {
+    if (order === "asc") {
+        return [...students].sort((a, b) => a.age - b.age);
     }
+
+    if (order === "desc") {
+        return [...students].sort((a, b) => b.age - a.age);
+    }
+
+    return [];
+}
+
+export async function initializeStudents() {
+    students = await loadStudents();
 }
 
 export function getAllStudents() {
     return students;
 }
 
-export async function addStudent(student) {
+export async function addStudent(name, age, faculty) {
+    const id = generateStudentId();
+    console.log(id, name, age, faculty);
+    const student = createStudent(id, name, age, faculty);
+
     students.push(student);
-    await saveStudents();
+    await saveStudents(students);
 }
 
 export function searchStudent(name) {
@@ -43,7 +55,7 @@ export async function removeStudent(name) {
     const removed = students.length < initialLength;
 
     if(removed) {
-        await saveStudents();
+        await saveStudents(students);
     } 
 
     return removed;
@@ -58,7 +70,7 @@ export async function updateStudent(name, newFaculty, newAge) {
 
     student.faculty = newFaculty;
     student.age = newAge;
-    await saveStudents();
+    await saveStudents(students);
     return true;
 }
 
