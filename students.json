@@ -1,26 +1,37 @@
 [
   {
+    "id": 1,
     "name": "Daniele",
     "age": 20,
     "faculty": "Ingegneria Meccanica",
     "university": "Politecnico di Milano"
   },
   {
-    "name": "Marco",
-    "age": 21,
-    "faculty": "Ingegneria Informatica",
+    "id": 2,
+    "name": "Riccardo",
+    "age": 20,
+    "faculty": "Ingegneria Aerospaziale",
     "university": "Politecnico di Milano"
   },
   {
-    "name": "Luca",
-    "age": 22,
-    "faculty": "Ingegneria Energetica",
-    "university": "Politecnico di Milano"
-  },
-  {
-    "name": "Egidio",
-    "age": 45,
+    "id": 3,
+    "name": "Andrea",
+    "age": 16,
     "faculty": "Medicina",
+    "university": "Politecnico di Milano"
+  },
+  {
+    "id": 4,
+    "name": "Giulia",
+    "age": 18,
+    "faculty": "Ingegneria Chimica",
+    "university": "Politecnico di Milano"
+  },
+  {
+    "id": 5,
+    "name": "Riccardo",
+    "age": 23,
+    "faculty": "Biologia",
     "university": "Politecnico di Milano"
   }
 ]
