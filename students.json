@@ -2,15 +2,8 @@
   {
     "id": 1,
     "name": "Daniele",
-    "age": 20,
-    "faculty": "Ingegneria Meccanica",
-    "university": "Politecnico di Milano"
-  },
-  {
-    "id": 2,
-    "name": "Riccardo",
-    "age": 20,
-    "faculty": "Ingegneria Aerospaziale",
+    "age": 21,
+    "faculty": "Ingegneria Spaziale",
     "university": "Politecnico di Milano"
   },
   {
@@ -32,6 +25,13 @@
     "name": "Riccardo",
     "age": 23,
     "faculty": "Biologia",
+    "university": "Politecnico di Milano"
+  },
+  {
+    "id": 6,
+    "name": "Elisa",
+    "age": 20,
+    "faculty": "Farmacia",
     "university": "Politecnico di Milano"
   }
 ]
