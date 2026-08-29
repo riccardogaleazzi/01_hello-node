@@ -81,9 +81,10 @@ async function addStudent() {
 }
 
 async function removeStudent() {
-    const name = await askQuestion("Quale studente vuoi rimuovere? ");
+    const id = await askQuestion("Quale ID vuoi rimuovere? ");
+    const numericId = Number(id);
 
-    const removed = await removeStudentFromManager(name);
+    const removed = await removeStudentFromManager(numericId);
 
     if (removed) {
         console.log("Studente rimosso!");
@@ -93,12 +94,13 @@ async function removeStudent() {
 }
 
 async function updateStudent(){
-    const name = await askQuestion("Quale studente vuoi modificare? ");
+    const id = await askQuestion("Quale ID vuoi modificare? ");
+    const numericId = Number(id);
     const newFaculty = await askQuestion("Nuovo corso di laurea: ");
     const newAge = await askQuestion("Nuova età: ");
     const numericAge = Number(newAge);
 
-    const updated = await updateStudentFromManager(name, newFaculty, numericAge);
+    const updated = await updateStudentFromManager(numericId, newFaculty, numericAge);
 
     if(updated) {
         console.log("Studente aggiornato!");

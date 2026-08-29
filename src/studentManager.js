@@ -1,4 +1,4 @@
-import { findStudent, createStudent } from "./student.js";
+import { findStudent, createStudent, findStudentById } from "./student.js";
 import { loadStudents, saveStudents } from "./studentRepository.js"
 
 let students = [
@@ -47,10 +47,10 @@ export function searchStudent(name) {
     return findStudent(students, name);
 }
 
-export async function removeStudent(name) {
+export async function removeStudent(id) {
     const initialLength = students.length;
 
-    students = students.filter(student => student.name !== name);
+    students = students.filter(student => student.id !== id);
 
     const removed = students.length < initialLength;
 
@@ -61,15 +61,16 @@ export async function removeStudent(name) {
     return removed;
 }
 
-export async function updateStudent(name, newFaculty, newAge) {
-    const student = findStudent(students, name);
+export async function updateStudent(id, newFaculty, newAge) {
+    const student = findStudentById(students, id);
 
-    if (!student) {
+    if(!student) {
         return false;
     }
 
     student.faculty = newFaculty;
     student.age = newAge;
+
     await saveStudents(students);
     return true;
 }
