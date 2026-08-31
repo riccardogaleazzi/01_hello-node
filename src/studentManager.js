@@ -4,6 +4,10 @@ import { loadStudents, saveStudents } from "./studentRepository.js"
 let students = [
 ];
 
+export function searchStudentById(id) {
+    return findStudentById(students, id);
+}
+
 function generateStudentId() {
     if (students.length === 0) {
         return 1;
@@ -36,11 +40,16 @@ export function getAllStudents() {
 
 export async function addStudent(name, age, faculty) {
     const id = generateStudentId();
+
     console.log(id, name, age, faculty);
+
     const student = createStudent(id, name, age, faculty);
 
     students.push(student);
+
     await saveStudents(students);
+
+    return student;
 }
 
 export function searchStudent(name) {
